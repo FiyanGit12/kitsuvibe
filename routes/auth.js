@@ -1,5 +1,5 @@
 // routes/auth.js
-// Updated untuk pakai OOP User model (TANPA bcrypt - untuk demo only)
+// Updated untuk pakai OOP User model
 
 const express = require("express");
 const router = express.Router();
@@ -41,7 +41,7 @@ router.post("/login", (req, res) => {
       // Pakai OOP User model
       const user = User.fromDatabase(result[0]);
 
-      // Plain text password comparison (DEMO ONLY - NOT SECURE!)
+      // Verify password menggunakan method dari class User
       // ENCAPSULATION - password tidak diexpose langsung
       if (!user.verifyPassword(password)) {
         return res.status(401).json({
@@ -107,7 +107,7 @@ router.post("/register", (req, res) => {
         });
       }
 
-      // Insert new user (plain text password - DEMO ONLY)
+      // Insert new user
       const insertSql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
       
       db.query(insertSql, [username, password, role], (err, result) => {

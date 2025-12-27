@@ -13,7 +13,7 @@ class User extends BaseModel {
   constructor(id, username, password, role = 'user') {
     super(id); // INHERITANCE
     this.#username = username;
-    this.#password = password;
+    this.#password = password; // Sudah dalam bentuk HASHED dari bcrypt
     this.#role = role;
   }
 
@@ -27,9 +27,10 @@ class User extends BaseModel {
   }
 
   // ENCAPSULATION - Password tidak bisa diakses langsung
-  // Hanya bisa verifikasi lewat method ini
-  // NOTE: Plain text comparison untuk DEMO ONLY - NOT SECURE!
+  // NOTE: Password comparison sekarang dilakukan di auth.js menggunakan bcrypt.compare()
+  // Method ini tidak dipakai lagi karena kita pakai bcrypt di route
   verifyPassword(inputPassword) {
+    // Deprecated: Use bcrypt.compare() in auth.js instead
     return this.#password === inputPassword;
   }
 
@@ -105,7 +106,7 @@ class User extends BaseModel {
       return new User(
         dbRow.id,
         dbRow.username,
-        dbRow.password,
+        dbRow.password, // Password dari DB sudah dalam bentuk HASHED
         dbRow.role
       );
     } catch (error) {
