@@ -13,7 +13,7 @@ const app = express();
 const allowedOrigins = [
   "https://kitsuvibe.vercel.app",
   "http://localhost:3000",
-  "http://localhost:5173", // Vite dev server
+  "http://localhost:5173",
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
@@ -35,7 +35,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ==================== API ROUTES - PREFIX /api ====================
+// ==================== API ROUTES ====================
 app.use("/api/auth", authRoutes);
 app.use("/api/anime", animeRoutes);
 app.use("/api/admin", adminRoutes);
@@ -45,10 +45,19 @@ if (process.env.NODE_ENV === "production") {
   // Serve static files dari Frontend/dist
   app.use(express.static(path.join(__dirname, 'Frontend/dist')));
   
-  // ✅ FIXED: Ganti * jadi /* atau pakai regex
   // Handle React Router - Serve index.html untuk semua NON-API routes
-  app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Frontend/dist/index.html'));
+  app.use((req, res, next) => {
+    // Skip kalau path dimulai dengan /api
+    if (req.path.startsWith('/api')) {
+      return next();
+    }
+    
+    // Serve index.html untuk React Router
+    res.sendFile(path.join(__dirname, 'Frontend/dist/index.html'), (err) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+    });
   });
 } else {
   // ==================== DEVELOPMENT ====================
@@ -68,6 +77,7 @@ if (process.env.NODE_ENV === "production") {
 
 // ==================== START SERVER ====================
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📍 Environment: ${process.env.NODE_ENV || "development"}`);
