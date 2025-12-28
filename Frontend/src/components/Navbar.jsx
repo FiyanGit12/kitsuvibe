@@ -6,12 +6,22 @@ import { Menu, X, LogOut, Search, ChevronDown } from "lucide-react";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [genreOpen, setGenreOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const user = getUser();
 
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery(""); // Clear search after submit
+      setOpen(false); // Close mobile menu
+    }
   };
 
   const genres = [
@@ -39,7 +49,7 @@ export default function Navbar() {
           <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
             <img 
               src="/logo/kitsuvibe.png" 
-              alt="Kitsunime Logo" 
+              alt="Kitsuvibe Logo" 
               className="w-7 h-7 sm:w-10 sm:h-7 object-contain"
             />
             <div className="text-xl sm:text-2xl font-bold tracking-tight whitespace-nowrap">
@@ -93,15 +103,22 @@ export default function Navbar() {
 
           {/* Search & Auth Area */}
           <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
-            {/* Search Box */}
-            <div className="relative">
+            {/* Search Box - Desktop */}
+            <form onSubmit={handleSearch} className="relative">
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari anime..."
                 className="w-48 xl:w-64 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg pl-4 pr-11 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400/50 focus:bg-white/10 transition-all duration-300"
               />
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-cyan-400" />
-            </div>
+              <button
+                type="submit"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition-colors"
+              >
+                <Search className="w-5 h-5" />
+              </button>
+            </form>
 
             {!user ? (
               <button
@@ -148,14 +165,21 @@ export default function Navbar() {
         {open && (
           <div className="lg:hidden mt-4 pt-4 border-t border-white/10 animate-fade-in max-h-[calc(100vh-80px)] overflow-y-auto">
             {/* Mobile Search */}
-            <div className="mb-4 relative">
+            <form onSubmit={handleSearch} className="mb-4 relative">
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari anime..."
                 className="w-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg pl-4 pr-11 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400/50 transition-all duration-300"
               />
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-cyan-400" />
-            </div>
+              <button
+                type="submit"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition-colors"
+              >
+                <Search className="w-5 h-5" />
+              </button>
+            </form>
 
             <ul className="space-y-3">
               {navLinks.map((link, idx) => (
@@ -182,7 +206,6 @@ export default function Navbar() {
                 
                 {genreOpen && (
                   <div className="mt-3 px-2">
-                    {/* Grid 2 kolom untuk mobile */}
                     <div className="grid grid-cols-2 gap-2">
                       {genres.map((genre, idx) => (
                         <Link
@@ -247,7 +270,7 @@ export default function Navbar() {
       </div>
 
       {/* Inline Styles for Animations */}
-       <style>{`
+      <style>{`
         @keyframes fade-in {
           from {
             opacity: 0;
@@ -263,7 +286,6 @@ export default function Navbar() {
           animation: fade-in 0.3s ease-out;
         }
 
-        /* Scrollbar tipis dan auto-hide */
         .overflow-y-auto::-webkit-scrollbar {
           width: 3px;
         }
@@ -281,13 +303,11 @@ export default function Navbar() {
           background: rgba(34, 211, 238, 0.4);
         }
 
-        /* Hide scrollbar by default, show on hover */
         .overflow-y-auto {
           scrollbar-width: thin;
           scrollbar-color: rgba(34, 211, 238, 0.2) transparent;
         }
 
-        /* Hide scrollbar on mobile (touch devices) */
         @media (hover: none) {
           .overflow-y-auto {
             scrollbar-width: none;
