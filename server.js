@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 
 const authRoutes = require("./routes/auth");
 const animeRoutes = require("./routes/anime");
@@ -39,19 +38,8 @@ app.use("/auth", authRoutes);
 app.use("/anime", animeRoutes);
 app.use("/admin", adminRoutes);
 
-// ==================== PRODUCTION: FRONTEND ====================
-if (process.env.NODE_ENV === "production") {
-  const frontendPath = path.join(__dirname, "Frontend", "dist");
-
-  app.use(express.static(frontendPath));
-
-  // ✅ SAFE FALLBACK (ANTI path-to-regexp ERROR)
-  app.use((req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
-  });
-}
 // ==================== DEVELOPMENT ====================
-else {
+if (process.env.NODE_ENV !== "production") {
   app.get("/", (req, res) => {
     res.json({
       status: "OK",
