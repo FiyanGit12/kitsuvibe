@@ -18,10 +18,10 @@ export default function Login() {
 
     try {
       // ✅ FIXED: Gunakan URL lengkap ke backend
-      const res = await axios.post("http://localhost:3000/auth/login", {
-        username,
-        password,
-      });
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
+    username,
+    password,
+    });
 
       // Save user data ke localStorage
       loginUser(res.data.user);
