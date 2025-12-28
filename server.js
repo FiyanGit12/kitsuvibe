@@ -45,8 +45,9 @@ if (process.env.NODE_ENV === "production") {
   // Serve static files dari Frontend/dist
   app.use(express.static(path.join(__dirname, 'Frontend/dist')));
   
+  // ✅ FIXED: Ganti * jadi /* atau pakai regex
   // Handle React Router - Serve index.html untuk semua NON-API routes
-  app.get('*', (req, res) => {
+  app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend/dist/index.html'));
   });
 } else {
