@@ -9,14 +9,17 @@ export default function GenrePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   useEffect(() => {
     fetchAnimesByGenre();
   }, [genre]);
 
   const fetchAnimesByGenre = async () => {
     setLoading(true);
+    setError("");
     try {
-      const res = await axios.get("http://localhost:3000/anime");
+      const res = await axios.get(`${API_URL}/anime`);
       
       // Filter anime by genre (case insensitive)
       const filtered = res.data.filter((anime) => {
@@ -34,9 +37,7 @@ export default function GenrePage() {
     }
   };
 
-  const capitalizeGenre = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
+  const capitalizeGenre = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
   if (loading) {
     return (
@@ -61,7 +62,6 @@ export default function GenrePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
-      {/* Hero Section */}
       <div className="relative pt-20 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
@@ -109,9 +109,7 @@ export default function GenrePage() {
                       src={anime.thumbnail || "/placeholder-anime.jpg"}
                       alt={anime.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      onError={(e) => {
-                        e.target.src = "/placeholder-anime.jpg";
-                      }}
+                      onError={(e) => { e.target.src = "/placeholder-anime.jpg"; }}
                     />
                     
                     {/* Overlay */}

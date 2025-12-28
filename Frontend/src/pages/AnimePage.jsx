@@ -8,13 +8,18 @@ export default function AnimePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Ambil API URL dari env variable
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   useEffect(() => {
     fetchAnimes();
   }, []);
 
   const fetchAnimes = async () => {
+    setLoading(true);
+    setError("");
     try {
-      const res = await axios.get("http://localhost:3000/anime");
+      const res = await axios.get(`${API_URL}/anime`);
       setAnimes(res.data);
     } catch (err) {
       console.error("Fetch anime error:", err);
@@ -97,13 +102,11 @@ export default function AnimePage() {
                       src={anime.thumbnail || "/placeholder-anime.jpg"}
                       alt={anime.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      onError={(e) => {
-                        e.target.src = "/placeholder-anime.jpg";
-                      }}
+                      onError={(e) => { e.target.src = "/placeholder-anime.jpg"; }}
                     />
                     
                     {/* Overlay */}
-                    <div className="absolute inset-0  to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute bottom-4 left-4 right-4">
                         <div className="flex items-center gap-2 text-cyan-400">
                           <Play className="w-5 h-5" />
