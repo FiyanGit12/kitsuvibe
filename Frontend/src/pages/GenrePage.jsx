@@ -9,6 +9,8 @@ export default function GenrePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   useEffect(() => {
     fetchAnimesByGenre();
   }, [genre]);
@@ -17,8 +19,7 @@ export default function GenrePage() {
     setLoading(true);
     setError("");
     try {
-      // ✅ FIXED: Pakai /api prefix
-      const res = await axios.get("/api/anime");
+      const res = await axios.get(`${API_URL}/anime`);
       
       // Filter anime by genre (case insensitive)
       const filtered = res.data.filter((anime) => {

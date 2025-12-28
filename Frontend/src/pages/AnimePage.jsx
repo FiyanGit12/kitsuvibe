@@ -8,6 +8,9 @@ export default function AnimePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Ambil API URL dari env variable
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   useEffect(() => {
     fetchAnimes();
   }, []);
@@ -16,8 +19,7 @@ export default function AnimePage() {
     setLoading(true);
     setError("");
     try {
-      // ✅ FIXED: Pakai /api prefix
-      const res = await axios.get("/api/anime");
+      const res = await axios.get(`${API_URL}/anime`);
       setAnimes(res.data);
     } catch (err) {
       console.error("Fetch anime error:", err);
