@@ -7,16 +7,8 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      // Proxy semua API calls ke backend
-      '/auth': {
-        target: 'http://localhost:3000',
-        changeOrigin: true
-      },
-      '/anime': {
-        target: 'http://localhost:3000',
-        changeOrigin: true
-      },
-      '/admin': {
+      // Proxy semua /api calls ke backend
+      '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true
       }
@@ -25,6 +17,13 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: false
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom']
+        }
+      }
+    }
   }
 })

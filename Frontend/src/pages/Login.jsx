@@ -17,13 +17,14 @@ export default function Login() {
     setError("");
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
+      // ✅ FIXED: Pakai /api prefix
+      const res = await axios.post("/api/auth/login", {
         username,
         password,
       });
 
       // Simpan user ke localStorage
-      loginUser(res.data.user);
+      loginUser(res.data);
 
       // Navigate berdasarkan role
       if (res.data.user.role === "admin") {

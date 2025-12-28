@@ -19,7 +19,6 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, etc)
     if (!origin) return callback(null, true);
 
     if (
@@ -36,18 +35,17 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ==================== API ROUTES - HARUS SEBELUM STATIC FILES ====================
-app.use("/auth", authRoutes);
-app.use("/anime", animeRoutes);
-app.use("/admin", adminRoutes);
+// ==================== API ROUTES - PREFIX /api ====================
+app.use("/api/auth", authRoutes);
+app.use("/api/anime", animeRoutes);
+app.use("/api/admin", adminRoutes);
 
 // ==================== SERVE FRONTEND (PRODUCTION) ====================
 if (process.env.NODE_ENV === "production") {
   // Serve static files dari Frontend/dist
   app.use(express.static(path.join(__dirname, 'Frontend/dist')));
   
-  // Handle React Router - Serve index.html untuk semua route yang BUKAN API
-  // PENTING: Ini harus PALING TERAKHIR setelah semua API routes
+  // Handle React Router - Serve index.html untuk semua NON-API routes
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend/dist/index.html'));
   });
@@ -59,9 +57,9 @@ if (process.env.NODE_ENV === "production") {
       message: "🎌 Backend Anime Streaming API running",
       environment: "development",
       endpoints: {
-        auth: ["/auth/login", "/auth/register"],
-        anime: ["/anime", "/anime/:id", "/anime/:id/episodes"],
-        admin: ["/admin/anime", "/admin/episode"]
+        auth: ["/api/auth/login", "/api/auth/register"],
+        anime: ["/api/anime", "/api/anime/:id", "/api/anime/:id/episodes"],
+        admin: ["/api/admin/anime", "/api/admin/episode"]
       }
     });
   });
