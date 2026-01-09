@@ -26,14 +26,6 @@ class User extends BaseModel {
     return this.#role;
   }
 
-  // ENCAPSULATION - Password tidak bisa diakses langsung
-  // NOTE: Password comparison sekarang dilakukan di auth.js menggunakan bcrypt.compare()
-  // Method ini tidak dipakai lagi karena kita pakai bcrypt di route
-  verifyPassword(inputPassword) {
-    // Deprecated: Use bcrypt.compare() in auth.js instead
-    return this.#password === inputPassword;
-  }
-
   // Helper methods
   isAdmin() {
     return this.#role === 'admin';
