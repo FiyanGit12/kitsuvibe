@@ -35,6 +35,11 @@ class User extends BaseModel {
     return this.#role === 'user';
   }
 
+  verifyPassword(password) {
+  const bcrypt = require('bcrypt'); 
+  return bcrypt.compareSync(password, this.#password);
+}
+
   // Setter methods dengan validation
   setUsername(username) {
     if (!username || username.length < 3) {
