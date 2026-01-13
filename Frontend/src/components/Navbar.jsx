@@ -38,7 +38,6 @@ export default function Navbar() {
   const navLinks = [
     { name: "Beranda", path: "/" },
     { name: "Anime", path: "/anime" },
-    { name: "Movie", path: "/movie" },
   ];
 
   return (
